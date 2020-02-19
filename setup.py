@@ -60,11 +60,7 @@ class CMakeBuild(build_ext):
 setup(
     name='paula',
     version='0.0.1',
-    author='Dean Moldovan',
-    author_email='dean0x7d@gmail.com',
-    description='A test project using pybind11 and CMake',
-    long_description='',
-    #packages=setuptools.find_packages(),
+    package_dir={'': 'src'},
     ext_modules=[CMakeExtension('paula.celia')],
     cmdclass=dict(build_ext=CMakeBuild),
     zip_safe=False,
