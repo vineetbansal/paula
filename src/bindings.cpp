@@ -6,8 +6,8 @@ int add(int i, int j) {
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(celia, m) {
-    m.attr("__name__") = "paula.celia";
+PYBIND11_MODULE(ext, m) {
+    m.attr("__name__") = "paula.ext";
     m.def("add", &add, R"pbdoc(
         Add two numbers
 

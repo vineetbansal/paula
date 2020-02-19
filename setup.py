@@ -61,7 +61,7 @@ setup(
     name='paula',
     version='0.0.1',
     package_dir={'': 'src'},
-    ext_modules=[CMakeExtension('paula.celia')],
+    ext_modules=[CMakeExtension('paula.ext')],
     cmdclass=dict(build_ext=CMakeBuild),
     zip_safe=False,
 )
