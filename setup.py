@@ -4,7 +4,6 @@ import sys
 import platform
 import subprocess
 
-import setuptools
 from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
 from distutils.version import LooseVersion
@@ -61,6 +60,7 @@ setup(
     name='paula',
     version='0.0.1',
     package_dir={'': 'src'},
+    test_suite='tests',
     ext_modules=[CMakeExtension('paula.ext')],
     cmdclass=dict(build_ext=CMakeBuild),
     zip_safe=False,
