@@ -1,4 +1,5 @@
 #include <pybind11/pybind11.h>
+#include "paula/celia/include/hello.h"
 
 int add(int i, int j) {
     return i + j;
@@ -19,6 +20,10 @@ PYBIND11_MODULE(ext, m) {
 
         Some other explanation about the subtract function.
     )pbdoc");
+
+    py::class_<Hello>(m, "Hello")
+    .def(py::init<>())
+    .def("greet", &Hello::greet);
 
 #ifdef VERSION_INFO
     m.attr("__version__") = VERSION_INFO;
