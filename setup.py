@@ -36,6 +36,9 @@ class CMakeBuild(build_ext):
         cmake_args = ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + extdir,
                       '-DPYTHON_EXECUTABLE=' + sys.executable]
 
+        import peigen
+        cmake_args += ['-DCMAKE_CXX_FLAGS=-isystem ' + peigen.header_path]
+
         cfg = 'Debug' if self.debug else 'Release'
         build_args = ['--config', cfg]
 
@@ -61,6 +64,7 @@ setup(
     version='0.0.1',
     package_dir={'': 'src'},
     test_suite='tests',
+    install_requires=['pybind11', 'peigen'],
     ext_modules=[CMakeExtension('paula.ext')],
     cmdclass=dict(build_ext=CMakeBuild),
     zip_safe=False,

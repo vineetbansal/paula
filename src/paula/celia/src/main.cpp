@@ -3,7 +3,7 @@
 
 int main(int argc, char *argv[])
 {
-    Hello hi;
-    std::cout << hi.greet() << std::endl;
+    Hello hello;
+    std::cout << hello.greet() << std::endl;
     return 0;
 }

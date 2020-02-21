@@ -1,11 +1,24 @@
 #include <pybind11/pybind11.h>
+#include <pybind11/eigen.h>
 #include "paula/celia/include/hello.h"
+
+namespace py = pybind11;
 
 int add(int i, int j) {
     return i + j;
 }
 
-namespace py = pybind11;
+template <typename T>
+void zero_first(Eigen::Ref<T> arr) {
+    // All eigen matrices are column-major
+    // if we specified <const T>, we can still pass in numpy arrays (row-major)
+    // but in the general case, T needs to be a row-major eigen array, for example:
+    // Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>
+    arr(0, 0) = 0;
+}
+
+typedef Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MatrixD;
+
 
 PYBIND11_MODULE(ext, m) {
     m.attr("__name__") = "paula.ext";
@@ -20,6 +33,8 @@ PYBIND11_MODULE(ext, m) {
 
         Some other explanation about the subtract function.
     )pbdoc");
+
+    m.def("zero_first", &zero_first<MatrixD>);
 
     py::class_<Hello>(m, "Hello")
     .def(py::init<>())
