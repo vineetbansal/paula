@@ -7,10 +7,10 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    container: quay.io/pypa/manylinux1_x86_64
+    container: quay.io/pypa/manylinux2010_x86_64
     steps:
-    - name: libstdc++ installation in container
-      run: yum install libstdc++6
+    - name: update glibc
+      run: sudo yum update glibc
     - uses: actions/checkout@v2
     - name: Set up Python
       uses: actions/setup-python@v1
