@@ -1,0 +1,6 @@
+numpy
+peigen
+pybind11
+setuptools
+twine
+wheel
