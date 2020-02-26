@@ -10,7 +10,7 @@ jobs:
     container: quay.io/pypa/manylinux2010_x86_64
     steps:
     - name: update glibc
-      run: yum update glibc
+      run: yum install glibc
     - uses: actions/checkout@v2
     - name: Set up Python
       uses: actions/setup-python@v1
