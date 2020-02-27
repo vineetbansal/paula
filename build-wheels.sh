@@ -10,7 +10,6 @@ for PYBIN in "${pys[@]}"; do
     "${PYBIN}/pip" wheel /io/ -w wheelhouse/
 done
 
-for whl in wheelhouse/$package_name-*.whl; do
+for whl in wheelhouse/paula-*.whl; do
     auditwheel repair "$whl" -w /io/wheelhouse/
 done
-
