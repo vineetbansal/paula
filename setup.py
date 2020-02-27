@@ -64,7 +64,6 @@ setup(
     version='0.0.1',
     package_dir={'': 'src'},
     test_suite='tests',
-    install_requires=['pybind11', 'peigen'],
     ext_modules=[CMakeExtension('paula.ext')],
     cmdclass=dict(build_ext=CMakeBuild),
     zip_safe=False,

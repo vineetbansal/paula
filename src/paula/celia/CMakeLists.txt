@@ -10,6 +10,7 @@ project(hello)
 add_library(hello STATIC
         src/hello.cpp
         )
+set_property(TARGET hello PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 target_include_directories(hello
         PUBLIC
