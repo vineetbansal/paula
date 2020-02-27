@@ -20,6 +20,7 @@ jobs:
 
   steps:
     - script: |
+        set -ex
         docker run --rm -v `pwd`:/io $(image) /io/build-wheels.sh
         ls -lh wheelhouse/
         mkdir -p dist
