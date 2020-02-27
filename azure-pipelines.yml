@@ -1,7 +1,15 @@
+trigger:
+  branches:
+    include:
+      - 'master'
+      
 variables:
   package_name: paula
 
+jobs:
 - job: ManyLinux
+  pool:
+    vmImage: 'ubuntu-latest'
   strategy:
     matrix:
       64Bit2010:
@@ -9,8 +17,7 @@ variables:
         plat: manylinux2010_x86_64
         image: quay.io/pypa/manylinux2010_x86_64
         python.architecture: x64
-  pool:
-    vmImage: 'ubuntu-latest'
+
   steps:
     - script: |
         docker run --rm -v `pwd`:/io $(image) /io/build-wheels.sh
