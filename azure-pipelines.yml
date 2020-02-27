@@ -19,6 +19,8 @@ jobs:
         python.architecture: x64
 
   steps:
+    - checkout: self
+      submodules: true
     - script: |
         set -ex
         docker run --rm -v `pwd`:/io $(image) /io/build-wheels.sh
