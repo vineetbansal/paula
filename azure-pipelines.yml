@@ -1,0 +1,20 @@
+variables:
+  package_name: paula
+
+- job: ManyLinux
+  strategy:
+    matrix:
+      64Bit2010:
+        arch: x86_64
+        plat: manylinux2010_x86_64
+        image: quay.io/pypa/manylinux2010_x86_64
+        python.architecture: x64
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
+    - script: |
+        docker run --rm -v `pwd`:/io $(image) /io/build-wheels.sh
+        ls -lh wheelhouse/
+        mkdir -p dist
+        cp wheelhouse/$(package_name)*.whl dist/.
+      displayName: Build wheels
