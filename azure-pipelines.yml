@@ -28,3 +28,7 @@ jobs:
         mkdir -p dist
         cp wheelhouse/$(package_name)*.whl dist/.
       displayName: Build wheels
+    - task: publish
+      inputs:
+        artifactname: 'artifact'
+        targetPath: 'dist'
