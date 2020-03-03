@@ -52,7 +52,9 @@ jobs:
         mkdir -p dist
         python -m pip install --upgrade pip
         python -m pip install --upgrade pytest wheel twine setuptools
-        python -m pip install -r requirements.txt 
+        python -m pip install -r requirements.txt
+        cmake -Bsrc/paula/celia/build -Ssrc/paula/celia
+        cmake --build src/paula/celia/build
         python -m pip wheel . -w wheelhouse/
         ls -lh wheelhouse
         mkdir -p dist
