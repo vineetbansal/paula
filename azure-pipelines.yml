@@ -23,12 +23,45 @@ jobs:
       submodules: true
     - script: |
         set -ex
-        docker run --rm -v `pwd`:/io $(image) /io/build-wheels.sh
+        docker run -e PLAT=$(plat) -e package_name=$(package_name) --rm -v `pwd`:/io $(image) /io/.ci/build-wheels.sh
         ls -lh wheelhouse/
         mkdir -p dist
         cp wheelhouse/$(package_name)*.whl dist/.
       displayName: Build wheels
     - task: PublishPipelineArtifact@1
       inputs:
-        artifactname: 'artifact'
+        artifactName: 'wheel_$(Agent.OS)_$(Agent.JobName)_$(python.architecture)'
         targetPath: 'dist'
+
+- job: macOS
+  variables:
+    python.architecture: 'x64'
+  strategy:
+    matrix:
+      Python36:
+        python.version: '3.6'
+      Python37:
+        python.version: '3.7'
+  pool:
+    vmImage: 'macOS-latest'
+  steps:
+    - checkout: self
+      submodules: true
+    - script: .ci/macos-install-python.sh '$(python.version)'
+    - script: |
+      mkdir -p dist
+      python -m pip install --upgrade pip
+      python -m pip install --upgrade pytest wheel twine setuptools
+      python -m pip install -r requirements.txt 
+      python -m pip wheel . -w wheelhouse/
+      ls -lh wheelhouse
+      mkdir -p dist
+      cp wheelhouse/$(package_name)* dist/.
+      python -m pip install $(package_name) --no-index -f wheelhouse
+      python -m pip install delocate
+      /Library/Frameworks/Python.framework/Versions/$(python.version)/bin/delocate-wheel dist/$(package_name)*.whl
+    - task: PublishPipelineArtifact@1
+      inputs:
+        artifactName: 'wheel_$(Agent.OS)_$(Agent.JobName)_$(python.architecture)'
+        targetPath: 'dist'
+

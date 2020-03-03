@@ -11,5 +11,5 @@ class OpenMpTest(TestCase):
         pass
 
     def testNumOmpThreads(self):
-        self.assertEqual(ext.omp_sum(), 10)  # 0+1+2+3+4
+        self.assertEqual(ext.omp_sum(), 66)  # 0+1+2+3+4
 

@@ -11,6 +11,12 @@ for PYBIN in "${pys[@]}"; do
     "${PYBIN}/pip" wheel /io/ -w wheelhouse/
 done
 
-for whl in wheelhouse/paula-*.whl; do
+for whl in wheelhouse/$package_name-*.whl; do
     auditwheel repair "$whl" -w /io/wheelhouse/
 done
+
+for PYBIN in "${pys[@]}"; do
+    "${PYBIN}/python" -m pip install $package_name --no-index -f /io/wheelhouse
+    "${PYBIN}/pytest" /io/tests
+done
+
