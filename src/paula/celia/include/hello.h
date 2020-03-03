@@ -7,4 +7,6 @@ public:
     char* greet();
 };
 
+int omp_sum();
+
 #endif

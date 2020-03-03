@@ -1,15 +1,10 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.13)
 
 project(hello)
 
-############################################################
-# Create a library
-############################################################
-
-#Generate the static library from the library sources
-add_library(hello STATIC
-        src/hello.cpp
-        )
+add_library(hello STATIC src/hello.cpp)
+find_package(OpenMP REQUIRED)
+target_link_libraries(hello PUBLIC OpenMP::OpenMP_CXX)
 set_property(TARGET hello PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 target_include_directories(hello
@@ -17,18 +12,7 @@ target_include_directories(hello
         ${PROJECT_SOURCE_DIR}/include
         )
 
+add_executable(hello_binary src/main.cpp)
 
-############################################################
-# Create an executable
-############################################################
+target_link_libraries(hello_binary PRIVATE hello)
 
-# Add an executable with the above sources
-add_executable(hello_binary
-        src/main.cpp
-        )
-
-# link the new hello_library target with the hello_binary target
-target_link_libraries( hello_binary
-        PRIVATE
-        hello
-        )

@@ -40,6 +40,8 @@ PYBIND11_MODULE(ext, m) {
     .def(py::init<>())
     .def("greet", &Hello::greet);
 
+    m.def("omp_sum", &omp_sum);
+
 #ifdef VERSION_INFO
     m.attr("__version__") = VERSION_INFO;
 #else
