@@ -49,17 +49,17 @@ jobs:
       submodules: true
     - script: .ci/macos-install-python.sh '$(python.version)'
     - script: |
-      mkdir -p dist
-      python -m pip install --upgrade pip
-      python -m pip install --upgrade pytest wheel twine setuptools
-      python -m pip install -r requirements.txt 
-      python -m pip wheel . -w wheelhouse/
-      ls -lh wheelhouse
-      mkdir -p dist
-      cp wheelhouse/$(package_name)* dist/.
-      python -m pip install $(package_name) --no-index -f wheelhouse
-      python -m pip install delocate
-      /Library/Frameworks/Python.framework/Versions/$(python.version)/bin/delocate-wheel dist/$(package_name)*.whl
+        mkdir -p dist
+        python -m pip install --upgrade pip
+        python -m pip install --upgrade pytest wheel twine setuptools
+        python -m pip install -r requirements.txt 
+        python -m pip wheel . -w wheelhouse/
+        ls -lh wheelhouse
+        mkdir -p dist
+        cp wheelhouse/$(package_name)* dist/.
+        python -m pip install $(package_name) --no-index -f wheelhouse
+        python -m pip install delocate
+        /Library/Frameworks/Python.framework/Versions/$(python.version)/bin/delocate-wheel dist/$(package_name)*.whl
     - task: PublishPipelineArtifact@1
       inputs:
         artifactName: 'wheel_$(Agent.OS)_$(Agent.JobName)_$(python.architecture)'
