@@ -100,7 +100,7 @@ jobs:
     - checkout: self
       submodules: true
     - script: |
-        python -m pip install setuptools wheel pybind11 peigen
+        python -m pip install -r requirements.txt
     - script: |
         cd src/paula/celia
         mkdir build
