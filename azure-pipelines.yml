@@ -8,6 +8,7 @@ variables:
 
 jobs:
 - job: ManyLinux
+  condition: eq(1,2)
   pool:
     vmImage: 'ubuntu-latest'
   strategy:
@@ -34,6 +35,7 @@ jobs:
         targetPath: 'dist'
 
 - job: macOS
+  condition: eq(1,2)
   variables:
     python.architecture: 'x64'
   strategy:
@@ -66,4 +68,20 @@ jobs:
       inputs:
         artifactName: 'wheel_$(Agent.OS)_$(Agent.JobName)_$(python.architecture)'
         targetPath: 'dist'
-
+        
+- job: Windows
+  strategy:
+    matrix:
+      Python36:
+        python.version: '3.6'
+        python.architecture: 'x64'
+      Python37:
+        python.version: '3.7'
+        python.architecture: 'x64'
+  pool:
+    vmImage: 'vs2017-win2016'
+  steps:
+    - script: |
+        cmake --version 
+    - script: |
+        python --version 
