@@ -62,9 +62,10 @@ class CMakeBuild(build_ext):
 
 setup(
     name='paula',
-    version='0.0.1',
+    version='0.0.2',
     package_dir={'': 'src'},
     packages=find_namespace_packages(where='src'),
+    install_requires=['numpy'],
     test_suite='tests',
     ext_modules=[CMakeExtension('paula.ext')],
     cmdclass=dict(build_ext=CMakeBuild),
