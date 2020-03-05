@@ -8,7 +8,6 @@ variables:
 
 jobs:
 - job: ManyLinux
-  condition: eq(1,2)
   pool:
     vmImage: 'ubuntu-latest'
   strategy:
@@ -29,13 +28,16 @@ jobs:
         mkdir -p dist
         cp wheelhouse/$(package_name)*.whl dist/.
       displayName: Build wheels
+    - script: |    
+        python -m pip install $(package_name) --no-index -f wheelhouse
+        python -m pytest tests
+      displayName: Install and test wheel      
     - task: PublishPipelineArtifact@1
       inputs:
         artifactName: 'wheel_$(Agent.OS)_$(Agent.JobName)_$(python.architecture)'
         targetPath: 'dist'
 
 - job: macOS
-  condition: eq(1,2)
   variables:
     python.architecture: 'x64'
   strategy:
@@ -61,9 +63,15 @@ jobs:
         ls -lh wheelhouse
         mkdir -p dist
         cp wheelhouse/$(package_name)* dist/.
+      displayName: Build wheel
+    - script: |    
         python -m pip install $(package_name) --no-index -f wheelhouse
+        python -m pytest tests
+      displayName: Install and test wheel
+    - script: |
         python -m pip install delocate
         /Library/Frameworks/Python.framework/Versions/$(python.version)/bin/delocate-wheel dist/$(package_name)*.whl
+      displayName: Delocate wheel
     - task: PublishPipelineArtifact@1
       inputs:
         artifactName: 'wheel_$(Agent.OS)_$(Agent.JobName)_$(python.architecture)'
@@ -93,8 +101,15 @@ jobs:
         cmake --build . --config Release
       displayName: Compile C library
     - script: |
-        python setup.py bdist_wheel
-      displayName: Build wheels     
+        python -m pip wheel . -w wheelhouse/
+        ls -lh wheelhouse
+        mkdir -p dist
+        cp wheelhouse/$(package_name)* dist/.
+      displayName: Build wheel
+    - script: |    
+        python -m pip install $(package_name) --no-index -f wheelhouse
+        python -m pytest tests
+      displayName: Install and test wheel      
     - task: PublishPipelineArtifact@1
       inputs:
         artifactName: 'wheel_$(Agent.OS)_$(Agent.JobName)_$(python.architecture)'
