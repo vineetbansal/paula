@@ -95,3 +95,7 @@ jobs:
     - script: |
         python setup.py bdist_wheel
       displayName: Build wheels     
+    - task: PublishPipelineArtifact@1
+      inputs:
+        artifactName: 'wheel_$(Agent.OS)_$(Agent.JobName)_$(python.architecture)'
+        targetPath: 'dist'
