@@ -24,15 +24,11 @@ jobs:
       submodules: true
     - script: |
         set -ex
-        docker run -e PLAT=$(plat) -e package_name=$(package_name) --rm -v `pwd`:/io $(image) /io/.ci/build-wheels.sh
+        docker run -e PLAT=$(plat) -e package_name=$(package_name) -e OMP_NUM_THREADS=$(OMP_NUM_THREADS) --rm -v `pwd`:/io $(image) /io/.ci/build-wheels.sh
         ls -lh wheelhouse/
         mkdir -p dist
         cp wheelhouse/$(package_name)*.whl dist/.
-      displayName: Build wheels
-    - script: |    
-        python -m pip install $(package_name) --no-index -f wheelhouse
-        python -m pytest tests
-      displayName: Install and test wheel      
+      displayName: Build and test wheels    
     - task: PublishPipelineArtifact@1
       inputs:
         artifactName: 'wheel_$(Agent.OS)_$(Agent.JobName)_$(python.architecture)'
@@ -64,10 +60,13 @@ jobs:
     - script: |
         mkdir -p dist
         python -m pip install --upgrade pip
-        python -m pip install --upgrade pytest wheel twine setuptools
         python -m pip install -r requirements.txt
+      displayName: Install pip dependencies
+    - script: |
         cmake -Bsrc/paula/celia/build -Ssrc/paula/celia
         cmake --build src/paula/celia/build
+      displayName: Compile C library
+    - script: |
         python -m pip wheel . -w wheelhouse/
         ls -lh wheelhouse
         mkdir -p dist
@@ -102,6 +101,7 @@ jobs:
       submodules: true
     - script: |
         python -m pip install -r requirements.txt
+      displayName: Install pip dependencies
     - script: |
         cd src/paula/celia
         mkdir build
