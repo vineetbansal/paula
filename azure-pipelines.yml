@@ -81,7 +81,15 @@ jobs:
   pool:
     vmImage: 'vs2017-win2016'
   steps:
+    - checkout: self
+      submodules: true
     - script: |
         cmake --version 
     - script: |
         python --version 
+    - script: |
+        cd src/paula/celia
+        mkdir build
+        cd build
+        cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Release ..
+      displayName: Compile C library
