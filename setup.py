@@ -37,17 +37,18 @@ class CMakeBuild(build_ext):
                       '-DPYTHON_EXECUTABLE=' + sys.executable]
 
         import peigen
-        cmake_args += ['-DCMAKE_CXX_FLAGS=-isystem ' + peigen.header_path]
 
         cfg = 'Debug' if self.debug else 'Release'
         build_args = ['--config', cfg]
 
         if platform.system() == "Windows":
+            cmake_args += ['-DCMAKE_CXX_FLAGS=-I ' + peigen.header_path]
             cmake_args += ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{}={}'.format(cfg.upper(), extdir)]
             if sys.maxsize > 2**32:
                 cmake_args += ['-A', 'x64']
             build_args += ['--', '/m']
         else:
+            cmake_args += ['-DCMAKE_CXX_FLAGS=-isystem ' + peigen.header_path]
             cmake_args += ['-DCMAKE_BUILD_TYPE=' + cfg]
             build_args += ['--', '-j2']
 
