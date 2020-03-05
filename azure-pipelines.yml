@@ -5,6 +5,7 @@ trigger:
       
 variables:
   package_name: paula
+  OMP_NUM_THREADS: 12
 
 jobs:
 - job: ManyLinux
