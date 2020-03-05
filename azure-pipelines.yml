@@ -84,9 +84,7 @@ jobs:
     - checkout: self
       submodules: true
     - script: |
-        cmake --version 
-    - script: |
-        python --version 
+        python -m pip install setuptools, wheels, pybind11, peigen
     - script: |
         cd src/paula/celia
         mkdir build
@@ -94,3 +92,6 @@ jobs:
         cmake -A x64 ..
         cmake --build . --config Release
       displayName: Compile C library
+    - script: |
+        python setup.py bdist_wheel
+      displayName: Build wheels     
