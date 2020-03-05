@@ -51,7 +51,15 @@ jobs:
   steps:
     - checkout: self
       submodules: true
-    - script: .ci/macos-install-python.sh '$(python.version)'
+    - script: |
+        .ci/macos-install-python.sh '$(python.version)'
+      displayName: Install Python
+    - script: |
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+      displayName: Install Homebrew
+    - script: |
+        brew install libomp
+      displayName: Install libomp      
     - script: |
         mkdir -p dist
         python -m pip install --upgrade pip
