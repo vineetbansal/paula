@@ -5,6 +5,7 @@ trigger:
       
 variables:
   package_name: paula
+  OMP_NUM_THREADS: 12
 
 jobs:
 - job: ManyLinux
@@ -23,11 +24,11 @@ jobs:
       submodules: true
     - script: |
         set -ex
-        docker run -e PLAT=$(plat) -e package_name=$(package_name) --rm -v `pwd`:/io $(image) /io/.ci/build-wheels.sh
+        docker run -e PLAT=$(plat) -e package_name=$(package_name) -e OMP_NUM_THREADS=$(OMP_NUM_THREADS) --rm -v `pwd`:/io $(image) /io/.ci/build-wheels.sh
         ls -lh wheelhouse/
         mkdir -p dist
         cp wheelhouse/$(package_name)*.whl dist/.
-      displayName: Build wheels
+      displayName: Build and test wheels    
     - task: PublishPipelineArtifact@1
       inputs:
         artifactName: 'wheel_$(Agent.OS)_$(Agent.JobName)_$(python.architecture)'
@@ -47,23 +48,81 @@ jobs:
   steps:
     - checkout: self
       submodules: true
-    - script: .ci/macos-install-python.sh '$(python.version)'
+    - script: |
+        .ci/macos-install-python.sh '$(python.version)'
+      displayName: Install Python
+    - script: |
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+      displayName: Install Homebrew
+    - script: |
+        brew install libomp
+      displayName: Install libomp      
     - script: |
         mkdir -p dist
         python -m pip install --upgrade pip
-        python -m pip install --upgrade pytest wheel twine setuptools
         python -m pip install -r requirements.txt
+      displayName: Install pip dependencies
+    - script: |
         cmake -Bsrc/paula/celia/build -Ssrc/paula/celia
         cmake --build src/paula/celia/build
+      displayName: Compile C library
+    - script: |
         python -m pip wheel . -w wheelhouse/
         ls -lh wheelhouse
         mkdir -p dist
         cp wheelhouse/$(package_name)* dist/.
+      displayName: Build wheel
+    - script: |    
         python -m pip install $(package_name) --no-index -f wheelhouse
+        python -m pytest tests
+      displayName: Install and test wheel
+    - script: |
         python -m pip install delocate
         /Library/Frameworks/Python.framework/Versions/$(python.version)/bin/delocate-wheel dist/$(package_name)*.whl
+      displayName: Delocate wheel
     - task: PublishPipelineArtifact@1
       inputs:
         artifactName: 'wheel_$(Agent.OS)_$(Agent.JobName)_$(python.architecture)'
         targetPath: 'dist'
-
+        
+- job: Windows
+  strategy:
+    matrix:
+      Python36:
+        python.version: '3.6'
+        python.architecture: 'x64'
+      Python37:
+        python.version: '3.7'
+        python.architecture: 'x64'
+  pool:
+    vmImage: 'vs2017-win2016'
+  steps:
+    - checkout: self
+      submodules: true
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '$(python.version)'     
+    - script: |
+        python -m pip install -r requirements.txt
+      displayName: Install pip dependencies
+    - script: |
+        cd src/paula/celia
+        mkdir build
+        cd build
+        cmake -A x64 ..
+        cmake --build . --config Release
+      displayName: Compile C library
+    - script: |
+        python -m pip wheel . -w wheelhouse/
+        ls -lh wheelhouse
+        mkdir -p dist
+        cp wheelhouse/$(package_name)* dist/.
+      displayName: Build wheel
+    - script: |    
+        python -m pip install $(package_name) --no-index -f wheelhouse
+        python -m pytest tests
+      displayName: Install and test wheel      
+    - task: PublishPipelineArtifact@1
+      inputs:
+        artifactName: 'wheel_$(Agent.OS)_$(Agent.JobName)_$(python.architecture)'
+        targetPath: 'dist'
