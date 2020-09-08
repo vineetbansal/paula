@@ -11,4 +11,4 @@ install:
   - pip install tox-travis
 
 script:
-    - tox
+    - OMP_NUM_THREADS=12 tox
