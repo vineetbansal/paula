@@ -1,12 +1,11 @@
 #!/bin/bash
 
+sudo apt-get install libeigen3-dev
+sudo ln -s /usr/include/eigen3/Eigen /usr/include/Eigen
+
 pip uninstall -y paula
 
 rm -rf dist build
-rm -rf src/paula/celia/build/*
-
-cmake -Ssrc/paula/celia -Bsrc/paula/celia/build
-cmake --build src/paula/celia/build
 
 python setup.py install
 pytest tests

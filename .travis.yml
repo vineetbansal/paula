@@ -2,6 +2,11 @@ language: python
 python:
   - "3.7"
 
+before_install:
+  - sudo apt-get -y install libeigen3-dev
+  # https://github.com/opencv/opencv/issues/14868
+  - sudo ln -s /usr/include/eigen3/Eigen /usr/include/Eigen
+
 install:
   - pip install tox-travis
 
