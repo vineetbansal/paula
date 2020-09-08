@@ -12,3 +12,6 @@ install:
 
 script:
     - OMP_NUM_THREADS=12 tox
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
