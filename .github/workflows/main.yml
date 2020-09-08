@@ -34,12 +34,14 @@ jobs:
           python -m pip install coverage tox tox-gh-actions
 
       - name: Run Tox
-        run: OMP_NUM_THREADS=12 python -m tox
+        run: |
+          python -m tox
 
-      - name: "Convert coverage"
-        run: "python -m coverage xml"
+      - name: Convert coverage
+        run: |
+          python -m coverage xml
 
-      - name: "Upload coverage to Codecov"
-        uses: "codecov/codecov-action@v1"
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
         with:
           fail_ci_if_error: true
