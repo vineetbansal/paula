@@ -10,6 +10,8 @@ Pybind11, while exercising commonly applicable testing/CI practices.
 I'll try to keep this updated as CIs evolve and try to improve things (but end up breaking them instead), but no
 guarantees. If the badges you see here are green, then things are probably still working.
 
+View the [documentation](https://vineetbansal.github.io/paula/).
+
 ### Installation
 
 You need the `Eigen` library and headers to compile and install `paula`. On Debian systems, this amounts to:
