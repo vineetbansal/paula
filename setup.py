@@ -60,6 +60,7 @@ class CMakeBuild(build_ext):
         subprocess.check_call(['cmake', ext.sourcedir] + cmake_args, cwd=self.build_temp, env=env)
         subprocess.check_call(['cmake', '--build', '.'] + build_args, cwd=self.build_temp)
 
+
 setup(
     name='paula',
     version='0.0.2',
@@ -70,4 +71,8 @@ setup(
     ext_modules=[CMakeExtension('paula.ext')],
     cmdclass=dict(build_ext=CMakeBuild),
     zip_safe=False,
+
+    extras_require={
+        'dev': ['mock', 'numpydoc', 'pytest', 'sphinx', 'sphinxcontrib-bibtex', 'sphinx-rtd-theme']
+    }
 )
