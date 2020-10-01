@@ -77,7 +77,11 @@ jobs:
         run: |
           pip install .[dev]
 
-      - name: Execute script to build our documentation and update pages
+      - name: Build docs
+        run: |
+          cd docs && sphinx-apidoc -f -o ./source ../src -H Modules && make html && touch build/html/.nojekyll
+
+      - name: Update gh-pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: "docs/buildDocs.sh"
