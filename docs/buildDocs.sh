@@ -1,41 +1,12 @@
 #!/bin/bash
+
+# Adapted from:
+# https://tech.michaelaltfield.net/2020/07/18/sphinx-rtd-github-pages-1/
+
 set -x
-################################################################################
-# File:    buildDocs.sh
-# Purpose: Script that builds our documentation using sphinx and updates GitHub
-#          Pages. This script is executed by:
-#            .github/workflows/docs_pages_workflow.yml
-#
-# Authors: Michael Altfield <michael@michaelaltfield.net>
-# Created: 2020-07-17
-# Updated: 2020-07-17
-# Version: 0.1
-################################################################################
-
-###################
-# INSTALL DEPENDS #
-###################
-
-apt-get update
-apt-get -y install git rsync python3-sphinx python3-sphinx-rtd-theme
-
-#####################
-# DECLARE VARIABLES #
-#####################
-
 pwd
 ls -lah
 export SOURCE_DATE_EPOCH=$(git log -1 --pretty=%ct)
-
-##############
-# BUILD DOCS #
-##############
-
-# build our documentation with sphinx (see docs/conf.py)
-# * https://www.sphinx-doc.org/en/master/usage/quickstart.html#running-the-build
-(cd docs && sphinx-apidoc -f -o ./source ../src -H Modules)
-make -C docs clean
-make -C docs html
 
 #######################
 # Update GitHub Pages #

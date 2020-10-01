@@ -51,22 +51,35 @@ jobs:
           fail_ci_if_error: false
 
   build_docs:
+
     runs-on: ubuntu-latest
-    container: debian:buster-slim
+    strategy:
+      matrix:
+        python: [3.7]
 
     steps:
+      - uses: actions/checkout@v2
+        with:
+          lfs: false
+          submodules: true
 
-    - name: Prereqs
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        apt-get update
-        apt-get install -y git
-        git clone --depth 1 "https://token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" .
-      shell: bash
+      - name: Install Eigen Library
+        run: |
+          sudo apt-get -y install libeigen3-dev
+          sudo ln -s /usr/include/eigen3/Eigen /usr/include/Eigen
 
-    - name: Execute script to build our documentation and update pages
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: "docs/buildDocs.sh"
-      shell: bash
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install package
+        run: |
+          python -m install pip setuptools
+          pip install .[dev]
+
+      - name: Execute script to build our documentation and update pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: "docs/buildDocs.sh"
+        shell: bash
