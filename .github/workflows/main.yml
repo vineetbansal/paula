@@ -75,7 +75,6 @@ jobs:
 
       - name: Install package
         run: |
-          python -m install pip setuptools
           pip install .[dev]
 
       - name: Execute script to build our documentation and update pages
