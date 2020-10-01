@@ -33,6 +33,7 @@ export SOURCE_DATE_EPOCH=$(git log -1 --pretty=%ct)
 
 # build our documentation with sphinx (see docs/conf.py)
 # * https://www.sphinx-doc.org/en/master/usage/quickstart.html#running-the-build
+(cd docs && sphinx-apidoc -f -o ./source ../src -H Modules)
 make -C docs clean
 make -C docs html
 
@@ -63,6 +64,7 @@ cat > README.md <<EOF
 
 Nothing to see here. The contents of this branch are essentially a cache that's not intended to be viewed on github.com.
 
+The actual documentation is available at: https://vineetbansal.github.io/paula/
 
 If you're looking to update our documentation, check the relevant development branch's 'docs/' dir.
 
