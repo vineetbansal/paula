@@ -1,0 +1,10 @@
+paula package
+=============
+
+Module contents
+---------------
+
+.. automodule:: paula
+   :members:
+   :undoc-members:
+   :show-inheritance:
