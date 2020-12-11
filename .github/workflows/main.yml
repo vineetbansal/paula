@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python: [3.7]
+        python: [3.7, 3.8]
 
     steps:
       - uses: actions/checkout@v2
@@ -38,7 +38,6 @@ jobs:
         run: |
           tox
         env:
-          PLATFORM: ${{ matrix.python }}
           OMP_NUM_THREADS: 12
 
       - name: Convert coverage
