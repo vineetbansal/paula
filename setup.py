@@ -63,7 +63,7 @@ class CMakeBuild(build_ext):
 
 setup(
     name='paula',
-    version='0.0.2',
+    version='0.0.3',
     package_dir={'': 'src'},
     packages=find_namespace_packages(where='src'),
     install_requires=['numpy'],
